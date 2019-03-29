@@ -4,7 +4,9 @@
 @author: felix
 """
 from unittest import TestCase
+import os
 
+from report import Report
 from sql_alchemy_models import CredentialsModel
 
 
@@ -53,3 +55,26 @@ class ModelTests(TestCase):
         self.assertIsNone(credent.password)
         self.assertIsNone(credent.login_url)
         self.assertEqual('', str(credent))
+
+
+class ReportTest(TestCase):
+    filepath = 'tmp/'
+
+    def setUp(self) -> None:
+        pass
+
+    def tearDown(self) -> None:
+        for root, dir, files in os.walk(self.filepath):
+            for file in files:
+                os.remove(os.path.join(root, file))
+        os.removedirs(self.filepath)
+
+    def test_create_directory_during_init(self):
+        report = Report(self.filepath)
+        self.assertTrue(os.path.isdir(self.filepath))
+
+    def test_report_file_was_created(self):
+        report = Report(self.filepath)
+        self.assertIsNotNone(report.report_file)
+        with open(report.report_file, 'r+') as file:
+            self.assertEqual('<!DOCTYPE html >', file.readline().strip())
