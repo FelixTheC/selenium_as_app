@@ -77,4 +77,7 @@ class ReportTest(TestCase):
         report = Report(self.filepath)
         self.assertIsNotNone(report.report_file)
         with open(report.report_file, 'r+') as file:
-            self.assertEqual('<!DOCTYPE html >', file.readline().strip())
+            self.assertEqual('<!DOCTYPE html>', file.readline().strip())
+            self.assertEqual('<html lang="en">', file.readline().strip())
+            self.assertEqual('<head>', file.readline().strip())
+            self.assertEqual('<meta charset="UTF-8">', file.readline().strip())
