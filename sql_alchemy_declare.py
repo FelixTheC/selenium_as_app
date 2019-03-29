@@ -48,3 +48,4 @@ class TestObjects(Base):
 
 engine = create_engine('sqlite:///selenium_tests.db')
 Base.metadata.create_all(engine)
+# to write changes to the database run python sql_alchemy_declare.py
