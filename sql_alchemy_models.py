@@ -27,6 +27,7 @@ class MetaModel(type):
         new_obj = super().__new__(cls, name, bases, dct)
         new_obj.fields = fields
         new_obj.session = sessionmaker()
+        new_obj.obj = obj
         engine = create_engine('sqlite:///selenium_tests.db')
         new_obj.session.configure(bind=engine)
         for field in fields:
@@ -35,7 +36,7 @@ class MetaModel(type):
 
 
 class ModelBase(metaclass=MetaModel):
-    obj = Credentials
+    obj = None
 
     def __init__(self, **kwargs):
         if len(kwargs) != 0:
@@ -102,6 +103,39 @@ class ModelBase(metaclass=MetaModel):
                 setattr(self, fields[index], r)
         session.commit()
         return self
+
+    def filter(self, **kwargs):
+        session = self.session()
+        query = session.query(self.obj).filter_by(**kwargs)
+        params = {}
+        counter = 1
+        for i in range(1):
+            for key, val in kwargs.items():
+                params[f'{key}_{counter}'] = val
+            counter += 1
+        result = session.execute(text(str(query.__clause_element__())), params=params)
+        pattern = f'{self.obj.__tablename__}_'
+        fields = list([re.sub(pattern, '', i) for i in result.keys()])
+        objs = []
+        for row in result:
+            data = {'obj': self.obj}
+            for index, r in enumerate(row):
+                data[fields[index]] = r
+            objs.append(type('ModelBase', (), data))
+        session.commit()
+        return objs
+
+    def all(self):
+        session = self.session()
+        _all = session.query(self.obj).all()
+        session.commit()
+        objs = []
+        for a in _all:
+            data = {f: a.__getattribute__(f) for f in self.fields}
+            data['obj'] = self.obj
+            obj = type('ModelBase', (), data)
+            objs.append(obj)
+        return objs
 
     def save(self):
         kwargs = {field: self.__getattribute__(field) for field in self.fields}

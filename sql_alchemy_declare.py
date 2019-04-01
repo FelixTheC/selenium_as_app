@@ -38,14 +38,22 @@ class TestObjects(Base):
         (u'button', u'button'),
         (u'form', u'form'),
         (u'link', u'link'),
+        (u'text', u'text'),
+    ]
+    OPTIONS = [
+        (u'---', u'---'),
+        (u'exists', u'exists'),
+        (u'clickable', u'clickable'),
     ]
     __tablename__ = 'test_objects'
     id = Column(Integer, primary_key=True)
     test_object = Column(ChoiceType(OBJECTS))
+    should_be = Column(ChoiceType(OPTIONS))
+    compares_to = Column(String(500), nullable=False, default='-')
     test_form_values = Column(JSON(none_as_null=True))
     url_id = Column(Integer, ForeignKey('test_urls.id'))
 
 
-engine = create_engine('sqlite:///selenium_tests.db')
+engine = create_engine('sqlite:///selenium_tests.db', echo=True)
 Base.metadata.create_all(engine)
 # to write changes to the database run python sql_alchemy_declare.py

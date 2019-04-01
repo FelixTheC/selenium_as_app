@@ -7,7 +7,7 @@ from unittest import TestCase
 import os
 
 from report import Report
-from sql_alchemy_models import CredentialsModel
+from sql_alchemy_models import CredentialsModel, TestUrlsModel, ModelBase, TestObjectsModel
 
 
 class ModelTests(TestCase):
@@ -55,6 +55,16 @@ class ModelTests(TestCase):
         self.assertIsNone(credent.password)
         self.assertIsNone(credent.login_url)
         self.assertEqual('', str(credent))
+
+    def test_get_all_objs(self):
+        turls = TestUrlsModel().all()
+        self.assertTrue(len(turls) > 1)
+
+    def test_filter_objs(self):
+        turls = TestObjectsModel().filter(url_id=1)
+        self.assertTrue(len(turls) > 0)
+        for turl in turls:
+            self.assertTrue(turl.url_id == 1)
 
 
 class ReportTest(TestCase):
