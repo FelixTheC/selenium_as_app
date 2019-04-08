@@ -15,9 +15,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class SeleniumBase(unittest.TestCase):
 
-    testuser = 'testuser'
-    testpasswd = 'testpasswd'
-    testinst = 'inst'
+    testuser = 'eisenmenger'
+    testpasswd = 'verflixt87'
+    testinst = 'Studio2'
     testhost = 'localhost:8000/accounts/login/DE/de/'
     base_url = 'localhost:8000'
 
@@ -162,4 +162,4 @@ class SeleniumBase(unittest.TestCase):
     def get_picture_name(self, app, name):
         date_hour = str(datetime.today().hour)
         date = str(datetime.today().date())
-        return app + '/log_pics/' + date + '_' + date_hour + '_' + name + '.png'
+        return 'log_pics/' + date + '_' + date_hour + '_' + name + '.png'

@@ -1,0 +1,27 @@
+{% extends 'main.html' %}
+
+{% block extra_js_header %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4 col-lg-4">
+            <form>
+                <input type="submit" class="btn btn-primary">
+            </form>
+        </div>
+        <div class="col-md-8 col-lg-8">
+            <form>
+                <input type="text">
+                <input type="submit" class="btn btn-primary">
+            </form>
+            <div id="element">
+                {{ page|safe }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_js %}
+
+{% endblock %}
